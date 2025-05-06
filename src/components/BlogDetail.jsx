@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import Comment from './Comment';
 
 const BlogDetail = () => {
   const { id } = useParams();
@@ -29,7 +30,6 @@ const BlogDetail = () => {
           `http://localhost:9000/api/comment/fetch/${id}`
         );
         setComments(res.data.comments);
-        console.log(res.data.comments);
       } catch (err) {
         console.error(err);
       } finally {
@@ -40,6 +40,17 @@ const BlogDetail = () => {
     fetchBlog();
     fetchComments();
   }, [id]);
+
+  const refreshComments = async () => {
+    try {
+      const res = await axios.get(
+        `http://localhost:9000/api/comment/fetch/${id}`
+      );
+      setComments(res.data.comments);
+    } catch (err) {
+      console.error('Failed to refresh comments:', err);
+    }
+  };
 
   if (loadingBlog) return <div className="p-4">Loading blog...</div>;
   if (error) return <div className="p-4 text-red-500">{error}</div>;
@@ -67,24 +78,12 @@ const BlogDetail = () => {
       <h2 className="text-2xl font-semibold mb-4">Comments</h2>
       {loadingComments ? (
         <p>Loading comments...</p>
-      ) : comments.length === 0 ? (
-        <p className="text-gray-500">No comments yet.</p>
       ) : (
-        comments.map((comment, idx) => (
-          <div key={idx} className="mb-3 p-3 bg-base-200 rounded">
-            <div className="flex justify-between">
-              <p className="text-sm font-medium text-blue-600">
-                {comment.commented_by.firstName}
-              </p>
-              <span>
-                {new Date(comment.commentedAt)
-                  .toLocaleString('en-gb')
-                  .toString()}
-              </span>
-            </div>
-            <p className="text-base-content">{comment.comment}</p>
-          </div>
-        ))
+        <Comment
+          blogId={id}
+          comments={comments}
+          onCommentAdded={refreshComments}
+        />
       )}
     </div>
   );
