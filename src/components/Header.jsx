@@ -2,8 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../utils/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const loggedIn = useSelector((store) => store.user.isLoggedIn);
 
@@ -21,6 +23,12 @@ const Header = () => {
       </div>
 
       <div className="flex items-center gap-2">
+        <button
+          onClick={() => navigate('/summaries')}
+          className="btn btn-primary btn-sm"
+        >
+          AI Summaries
+        </button>
         {loggedIn && (
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-outline btn-sm">

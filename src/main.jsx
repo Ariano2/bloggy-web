@@ -10,6 +10,7 @@ import AuthPage from './components/AuthPage.jsx';
 import CreateBlog from './components/CreateBlog.jsx';
 import ManageBlogs from './components/ManageBlog.jsx';
 import EditBlog from './components/editBlog.jsx';
+import Summaries from './components/Summaries.jsx';
 import { BrowserRouter, Routes, Route } from 'react-router';
 
 createRoot(document.getElementById('root')).render(
@@ -23,6 +24,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/create" element={<CreateBlog />}></Route>
           <Route path="/my-blogs" element={<ManageBlogs />} />
           <Route path="/edit/:blogId" element={<EditBlog />} />
+          <Route path="/summaries" element={<Summaries />} />
         </Routes>
       </BrowserRouter>
     </Provider>
