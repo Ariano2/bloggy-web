@@ -11,6 +11,9 @@ const BlogDetail = () => {
   const [loadingComments, setLoadingComments] = useState(true);
   const [error, setError] = useState('');
 
+  const [liked, setLiked] = useState(false);
+  const [totalLikes, setTotalLikes] = useState(0);
+
   useEffect(() => {
     const fetchBlog = async () => {
       try {
@@ -37,8 +40,21 @@ const BlogDetail = () => {
       }
     };
 
+    const fetchLikeStatus = async () => {
+      try {
+        const res = await axios.get(`http://localhost:9000/api/likes/${id}`, {
+          withCredentials: true,
+        });
+        setLiked(res.data.user_liked);
+        setTotalLikes(res.data.total_likes);
+      } catch (err) {
+        console.error('Failed to fetch like status:', err);
+      }
+    };
+
     fetchBlog();
     fetchComments();
+    fetchLikeStatus();
   }, [id]);
 
   const refreshComments = async () => {
@@ -49,6 +65,30 @@ const BlogDetail = () => {
       setComments(res.data.comments);
     } catch (err) {
       console.error('Failed to refresh comments:', err);
+    }
+  };
+
+  const toggleLike = async () => {
+    try {
+      if (liked) {
+        await axios.delete(`http://localhost:9000/api/unlike/${id}`, {
+          withCredentials: true,
+        });
+        setLiked(false);
+        setTotalLikes((prev) => prev - 1);
+      } else {
+        await axios.post(
+          `http://localhost:9000/api/like/${id}`,
+          {},
+          {
+            withCredentials: true,
+          }
+        );
+        setLiked(true);
+        setTotalLikes((prev) => prev + 1);
+      }
+    } catch (err) {
+      console.error('Error toggling like:', err);
     }
   };
 
@@ -64,6 +104,22 @@ const BlogDetail = () => {
         By <span className="font-semibold">{blog.blog.author.firstName}</span> •
         Updated: {formattedDate}
       </p>
+
+      {/* Heart Button and Like Count */}
+      <div className="flex items-center gap-2 mt-2">
+        <button
+          onClick={toggleLike}
+          className={`text-2xl ${
+            liked ? 'text-red-500' : 'text-gray-400'
+          } hover:scale-110 transition-transform`}
+        >
+          {liked ? '❤️' : '🤍'}
+        </button>
+        <span className="text-gray-600">
+          {totalLikes} like{totalLikes !== 1 ? 's' : ''}
+        </span>
+      </div>
+
       <hr className="my-4" />
 
       {blog.blog.content.length > 0 &&

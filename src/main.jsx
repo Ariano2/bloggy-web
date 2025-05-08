@@ -14,19 +14,19 @@ import Summaries from './components/Summaries.jsx';
 import { BrowserRouter, Routes, Route } from 'react-router';
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <Provider store={store}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/blog/:id" element={<BlogDetail />} />
-          <Route path="/auth" element={<AuthPage />} />
-          <Route path="/create" element={<CreateBlog />}></Route>
-          <Route path="/my-blogs" element={<ManageBlogs />} />
-          <Route path="/edit/:blogId" element={<EditBlog />} />
-          <Route path="/summaries" element={<Summaries />} />
-        </Routes>
-      </BrowserRouter>
-    </Provider>
-  </StrictMode>
+  // <StrictMode>
+  <Provider store={store}>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/blog/:id" element={<BlogDetail />} />
+        <Route path="/auth" element={<AuthPage />} />
+        <Route path="/create" element={<CreateBlog />}></Route>
+        <Route path="/my-blogs" element={<ManageBlogs />} />
+        <Route path="/edit/:blogId" element={<EditBlog />} />
+        <Route path="/summaries" element={<Summaries />} />
+      </Routes>
+    </BrowserRouter>
+  </Provider>
+  // </StrictMode>
 );
